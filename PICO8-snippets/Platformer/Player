@@ -1,10 +1,10 @@
-Player Table (Platformer Base)
+### Player Table (Platformer Base)
 
 This snippet defines the core data required for the player: its position, size, and movement state. Students should copy this code into the top of their project's Lua file.
 
-Code Snippet
+##Code Snippet
 
--- PLAYER DATA
+```-- PLAYER DATA
 player = {
     x = 64,
     y = 64,
@@ -15,14 +15,14 @@ player = {
     name = 1,
     is_grounded = false,
     facing_right = true
-}
+}```
 
 
-Explanation of Parts
+## Explanation of Parts
 
 This structure uses a Lua table named player to hold all the unique information about our main character in one place.
 
-Key
+# Key
 
 Meaning
 
