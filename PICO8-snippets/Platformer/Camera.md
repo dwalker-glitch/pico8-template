@@ -5,13 +5,13 @@
 camera(0, 0)
 ```
 
-## 📸 Camera Control in PICO-8
+## Camera Control in PICO-8
 
 The `camera()` function controls the **viewport**—the specific area of your game world currently visible on the 128x128 pixel screen. By default, the camera is always at `(0, 0)`, which means the top-left corner of the screen is drawing the top-left corner of the entire game world.
 
 ---
 
-## 🌎 How it Changes the World
+## How it Changes the World
 
 The camera doesn't move objects; instead, it **shifts the origin point** for all drawing operations.
 
@@ -49,11 +49,10 @@ The goal is to position the camera so the player remains **centered** on the scr
 ### The Follow Formula
 
 ```
+function _update()
 -- The required camera position (cam_x) is:
--- Player's X position (player_x) MINUS half the screen width (64)
-cam_x = player_x - 64
-
--- The required camera position (cam_y) is:
--- Player's Y position (player_y) MINUS half the screen height (64)
-cam_y = player_y - 64
+-- Player's position (player.x, player.y) MINUS half the screen width (64)
+cam_x = player.x - 64
+cam_y = player.y - 64
+camera(cam_x, cam_y)
 ```
