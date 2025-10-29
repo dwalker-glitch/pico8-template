@@ -4,7 +4,7 @@ This snippet defines the core data required for the player: its position, size, 
 
 ##Code Snippet
 
-```-- PLAYER DATA
+``-- PLAYER DATA
 player = {
     x = 64,
     y = 64,
@@ -15,7 +15,7 @@ player = {
     name = 1,
     is_grounded = false,
     facing_right = true
-}```
+}``
 
 
 ## Explanation of Parts
