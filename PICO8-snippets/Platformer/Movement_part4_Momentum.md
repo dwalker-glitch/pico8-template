@@ -6,35 +6,14 @@ This is the final component of platformer movement. We use momentum (velocity on
 
 Horizontal movement is controlled by gradually accelerating the player and applying friction to slow them down when no buttons are pressed.
 
-Variable/Concept
+| Variable/Concept | Code Role | Explanation | 
+ | ----- | ----- | ----- | 
+| **`o.vx`** | Horizontal Velocity | Tracks the current left/right speed and direction. | 
+| **Acceleration** | `o.vx += accel` | Player input adds a small force (`accel`) to the velocity, gradually speeding the player up. | 
+| **Friction** | `o.vx *= friction` | Reduces the horizontal speed every frame, causing the player to slow down and glide to a stop when input is released. | 
+| **Wall Hit** | `if collide(o) then ... o.vx=0` | If the horizontal move causes a collision, `o.vx` is reset to `0`, stopping all momentum. |
 
-Code Role
-
-Explanation
-
-o.vx
-
-Horizontal Velocity
-
-Tracks the current left/right speed and direction.
-
-Acceleration
-
-o.vx += accel
-
-Player input adds a small force (accel) to the velocity, gradually speeding the player up.
-
-Friction
-
-o.vx *= friction
-
-Reduces the horizontal speed every frame, causing the player to slow down and glide to a stop when input is released.
-
-Wall Hit
-
-if collide(o) then ... o.vx=0
-
-If the horizontal move causes a collision, o.vx is reset to 0, stopping all momentum.
+---
 
 ## Final move(o) Function (Full Physics)
 
