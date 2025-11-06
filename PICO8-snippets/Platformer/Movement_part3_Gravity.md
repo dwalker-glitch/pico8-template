@@ -6,35 +6,12 @@ This section introduces the vertical physics, using the o.vy variable we defined
 
 Gravity is handled by continuously increasing the vertical velocity (o.vy) and checking for collision after the movement is applied.
 
-Variable/Concept
-
-Code Role
-
-Explanation
-
-o.vy
-
-Vertical Velocity
-
-Tracks current speed and direction (positive is down, negative is up for jump).
-
-gravity
-
-o.vy = o.vy + gravity
-
-Continuously accelerates the player downward, simulating gravity.
-
-terminal_vel
-
-Speed Clamp
-
-Sets a maximum falling speed to prevent infinite acceleration.
-
-Landing
-
-if collide(o) then ... o.vy=0
-
-If the downward move causes a collision, o.vy is reset to 0, stopping the player on the ground.
+| Variable/Concept | Code Role | Explanation | 
+ | ----- | ----- | ----- | 
+| **`o.vy`** | Vertical Velocity | Tracks current speed and direction (positive is down, negative is up for jump). | 
+| **`gravity`** | `o.vy = o.vy + gravity` | Continuously accelerates the player downward, simulating gravity. | 
+| **`terminal_vel`** | Speed Clamp | Sets a maximum falling speed to prevent infinite acceleration. | 
+| **Landing** | `if collide(o) then ... o.vy=0` | If the downward move causes a collision, `o.vy` is reset to `0`, stopping the player on the ground. |
 
 ---
 
