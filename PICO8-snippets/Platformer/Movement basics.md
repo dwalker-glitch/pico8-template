@@ -6,43 +6,21 @@ Before worrying about walls or gravity, we must set up the player's core structu
 
 For physics-based movement, the player object (o) needs to be initialized with horizontal (vx) and vertical (vy) velocity variables.
 
+```
 player = {
     x = 64,
     y = 64,
     vx = 0,
     vy = 0 -- Vertical Velocity (speed up/down)
 }
+```
 
-
-Field
-
-Value
-
-Explanation
-
-x
-
-64 (example)
-
-Initial X Position. The horizontal coordinate (in pixels).
-
-y
-
-64 (example)
-
-Initial Y Position. The vertical coordinate (in pixels).
-
-vx
-
-0
-
-Horizontal Velocity. Tracks the player's current speed and direction in the X-axis. Starts at 0.
-
-vy
-
-0
-
-Vertical Velocity. Tracks the player's current speed and direction in the Y-axis. Starts at 0.
+| Field | Value | Explanation | 
+ | ----- | ----- | ----- | 
+| `x` | `64` (example) | **Initial X Position.** The horizontal coordinate (in pixels). | 
+| `y` | `64` (example) | **Initial Y Position.** The vertical coordinate (in pixels). | 
+| `vx` | `0` | **Horizontal Velocity.** Tracks the player's current speed and direction in the X-axis. Starts at `0`. | 
+| `vy` | `0` | **Vertical Velocity.** Tracks the player's current speed and direction in the Y-axis. Starts at `0`. |
 
 ---
 
