@@ -32,10 +32,18 @@ function move(o)
     local accel = 0.5       
     local friction = 0.85   
     local max_h_vel = 3     
+    local jump_height = -4  -- Added: Initial speed when jumping up
 
-    -- VERTICAL MOVEMENT (From Step 3)
+    -- VERTICAL MOVEMENT (Gravity and Jump)
     
-    -- 1. APPLY GRAVITY & Y-VELOCITY
+    -- 1. APPLY JUMP INPUT
+    if (btnp(4)) then
+        if is_on_ground(o) then
+            o.vy = jump_height
+        end
+    end
+    
+    -- 2. APPLY GRAVITY & Y-VELOCITY
     o.vy = o.vy + gravity
     
     -- Clamp max falling speed
@@ -44,16 +52,16 @@ function move(o)
     -- Apply speculative move on Y-axis
     o.y = o.y + o.vy
     
-    -- 2. COLLISION CHECK (Y AXIS)
+    -- 3. COLLISION CHECK (Y AXIS)
     if collide(o) then
         o.y=ly    -- Collision! Move back to safe position
         o.vy=0    -- Stop vertical velocity (the player has landed or hit a ceiling)
     end
     
     
-    -- HORIZONTAL MOVEMENT (New)
+    -- HORIZONTAL MOVEMENT (Momentum and Friction)
     
-    -- 3. APPLY HORIZONTAL INPUT & FRICTION (MOMENTUM)
+    -- 4. APPLY HORIZONTAL INPUT & FRICTION (MOMENTUM)
     if (btn(1)) o.vx += accel -- Right: increase velocity
     if (btn(0)) o.vx -= accel -- Left: decrease velocity
     
@@ -67,7 +75,7 @@ function move(o)
     -- Apply speculative move on X-axis
     o.x = o.x + o.vx
     
-    -- 4. COLLISION CHECK (X AXIS)
+    -- 5. COLLISION CHECK (X AXIS)
     if collide(o) then
         o.x=lx    -- Collision! Move back to safe position
         o.vx=0    -- Stop horizontal velocity (the player has hit a wall)
