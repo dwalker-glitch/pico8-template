@@ -1,10 +1,8 @@
 # Platformer Physics: Gravity and Jump
 
-This section introduces the vertical physics, using the o.vy variable we defined in Step 1. Gravity is simply an acceleration that happens every frame.
+This section introduces the vertical physics, using the o.vy variable we defined in Step 1. Gravity and jumping are the core components of platformer vertical movement.
 
 ## Gravity Physics (Y-Axis)
-
-Gravity is handled by continuously increasing the vertical velocity (o.vy) and checking for collision after the movement is applied.
 
 | Variable/Concept | Code Role | Explanation | 
  | ----- | ----- | ----- | 
@@ -15,29 +13,57 @@ Gravity is handled by continuously increasing the vertical velocity (o.vy) and c
 
 ---
 
-## Updated move(o) (Gravity/Y-Axis Only)
+## Ground Check Function
 
-This version now includes the full vertical physics. It requires the collide(o) function from Step 2 to be defined elsewhere in your code.
+Before a player can jump, we must verify they are currently standing on a solid tile. This is done with a helper function that temporarily moves the player down one pixel to check for a collision.
+```
+-- Must be defined outside of move(o)
+function is_on_ground(o)
+    o.y += 1             -- Speculative move down 1 pixel
+    local grounded = collide(o) -- Check collision at that new position
+    o.y -= 1             -- IMPORTANT: Move back up immediately!
+    return grounded      -- Returns true if collision occurred
+end
+```
 
--- Remember to define your constants (gravity, terminal_vel) in _init or move(o)!
+## Jumping Logic
+
+The jump is triggered by checking the jump button (PICO-8 button 4, typically 'Z' or 'N') and ensuring the player is currently on the ground.
+
+---
+
+## Updated move(o) (Gravity and Jump)
+
+This version now includes the full vertical movement physics. It requires the collide(o) function from Step 2 and the is_on_ground(o) function from above.
+
+-- You must define the is_on_ground(o) function above or outside of move(o)!
 
 ```
 function move(o)
     local ly=o.y -- Save the last safe Y position
     
-    -- JUMP LOGIC: If a jump is pressed, set a negative vy value here (will be added later)
-    -- ...
+    -- CONSTANTS (Use your defined constants from Step 1)
+    local gravity = 0.2
+    local terminal_vel = 3
+    local jump_height = -4 -- The initial upward speed
     
-    -- 1. APPLY GRAVITY & Y-VELOCITY
-    o.vy = o.vy + 0.2 -- Use your gravity constant here
+    -- 1. APPLY JUMP INPUT
+    if (btnp(4)) then
+        if is_on_ground(o) then
+            o.vy = jump_height
+        end
+    end
+    
+    -- 2. APPLY GRAVITY & Y-VELOCITY
+    o.vy = o.vy + gravity
     
     -- Clamp max falling speed
-    if o.vy > 3 then o.vy = 3 end -- Use your terminal_vel constant here
+    if o.vy > terminal_vel then o.vy = terminal_vel end 
     
     -- Apply speculative move on Y-axis
     o.y = o.y + o.vy
     
-    -- 2. COLLISION CHECK (Y AXIS)
+    -- 3. COLLISION CHECK (Y AXIS)
     if collide(o) then
         o.y=ly    -- Collision! Move back to safe position
         o.vy=0    -- Stop vertical velocity (the player has landed or hit a ceiling)
