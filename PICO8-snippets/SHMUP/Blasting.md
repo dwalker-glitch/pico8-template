@@ -23,16 +23,42 @@ BLASTER_SPEED = 5
 
 ---
 
-## 2. The fire_blaster() Function
+## 2. Cooldown Timer: Frame Counting
+
+When the game runs, the _update() function is called every frame (60 times per second normally). We use this reliable, consistent interval to manage all in-game timers and cooldowns.
+
+Frame Counting is the simple technique of continuously decrementing a counter (like player.fire_cooldown) inside _update() until it reaches 0. When the counter is at 0, the action (firing a shot) is allowed.
+
+`update_player_timers(o)`
+
+This new helper function must be called in _update() every frame to handle time progression for the player object (`o`).
+
+| Line | Code | Explanation | 
+| :--- | :--- | :--- | 
+| `2` | `if btnp(5) and player.fire_cooldown == 0 then` | **Combined Check:** Only fire if the button is pressed *and* the timer is ready. | 
+| `3-7` | `add(blasters, { ... })` | **Blaster Creation:** Creates and inserts the new projectile. | 
+| `8` | `player.fire_cooldown = player.max_cooldown` | **Cooldown Reset:** Immediately sets the counter back to the maximum value, starting the delay. |
+
+```
+function update_player_timers(o)
+    -- Decrement the fire cooldown every frame
+    if o.fire_cooldown > 0 then
+        o.fire_cooldown -= 1
+    end
+end
+```
+
+## 3. The fire_blaster() Function
 
 This function is responsible for creating a new blaster object and adding it to the global blasters table when the fire button (PICO-8 button 5, typically 'X' or 'M') is pressed.
 
 | Line | Code | Explanation | 
  | ----- | ----- | ----- | 
-| `2` | `if btnp(5) then` | **Input Check:** `btnp(5)` ensures the code runs **only once** when button 5 is *first pressed* (preventing a machine gun effect unless intended). | 
-| `3-7` | `add(blasters, { ... })` | **Blaster Creation:** Creates a new **blaster** table (object) and uses `add()` to insert it into the global `blasters` array. | 
-| `4-5` | `x=player.x, y=player.y` | **Spawn Position:** The **blaster** spawns exactly where the player is. | 
-| `6` | `speed = -BLASTER_SPEED` | **Velocity:** Gives the **blaster** a negative vertical speed (`-5` pixels per frame) to make it travel **up** the screen. |
+| `2` | `if btnp(5) and player.fire_cooldown == 0 then` | **Combined Check:** Only fire if the button is pressed *and* the timer is ready. | 
+| `3` | `add(blasters, { ... })` | **Blaster Creation:** Starts a new object definition inside the `blasters` array. | 
+| `4-5` | `x=player.x+4, y=player.y` | **Spawn Position:** The blaster spawns slightly offset (`+4` to center on an 8-pixel sprite) at the player's Y position. | 
+| `6` | `speed = -BLASTER_SPEED` | **Velocity:** Gives the blaster negative vertical speed to move **up** the screen. | 
+| `8` | `player.fire_cooldown = player.max_cooldown` | **Cooldown Reset:** Immediately sets the counter back to the maximum value, starting the delay. |
 
 ---
 
@@ -63,13 +89,26 @@ This function simply draws the sprite for every active blaster.
 ## Full Blaster Code
 
 ```
+function update_player_timers(o)
+    -- Cooldown Timer: Decrement until 0
+    if o.fire_cooldown > 0 then
+        o.fire_cooldown -= 1
+    end
+    
+    -- (Invulnerability timer logic would go here later)
+end
+
 function fire_blaster()
-    if btnp(5) then -- Check for single press of X button
+    -- Only fire if the button is pressed AND the cooldown is ready (== 0)
+    if btnp(5) and player.fire_cooldown == 0 then 
         add(blasters, {
-            x=player.x+4, -- Spawn centered horizontally
+            x=player.x+4, -- Spawn centered horizontally on player sprite
             y=player.y,
             speed = -BLASTER_SPEED, -- Move up
         })
+        
+        -- Reset the cooldown timer immediately
+        player.fire_cooldown = player.max_cooldown
     end
 end
 
