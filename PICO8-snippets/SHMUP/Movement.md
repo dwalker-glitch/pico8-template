@@ -4,32 +4,7 @@ Movement in a space shooter (sometimes called a vertical or horizontal scroller)
 
 ---
 
-## 1. Required Player Setup (in _init)
-
-The player table for a space shooter needs a position and a fixed speed value.
-
-```
--- Example Initialization (in your _init function)
-player = {
-    x = 60,
-    y = 100,
-    speed = 2.5, -- Pixel speed per frame
-    w = 8,       -- Width for boundaries
-    h = 8,       -- Height for boundaries
-}
-```
-
-| Field | Value | Explanation | 
- | ----- | ----- | ----- | 
-| `x` | `60` (example) | **Initial X Position.** Horizontal coordinate. | 
-| `y` | `100` (example) | **Initial Y Position.** Vertical coordinate. | 
-| `speed` | `2.5` (example) | **Movement Speed.** How many pixels the player moves per frame when an arrow key is held. | 
-| `w` | `8` | **Width.** Used for boundary checks (if the sprite is 8x8). | 
-| `h` | `8` | **Height.** Used for boundary checks. |
-
----
-
-## 2. The move(o) Function: Direct Control
+## The move(o) Function: Direct Control
 
 This function takes player input and directly updates the player's position based on the o.speed value, followed by a check to ensure the player remains on screen.
 
