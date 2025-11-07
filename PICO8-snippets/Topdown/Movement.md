@@ -2,24 +2,9 @@
 
 For adventure or RPG-style games, movement is usually direct and instant. When a button is pressed, the player moves by a fixed speed, and when the button is released, movement stops. No gravity or friction is needed.
 
-## Required Player Setup (in _init)
-
-The player object needs basic position variables (x, y) and a fixed speed value, which we will use instead of velocity (vx, vy).
-
-```
-player = {
-    x = 64,
-    y = 64,
-    speed = 2.0 -- How many pixels to move per frame
-}
-```
-
-
----
-
 ## The move(o) Function (Input Only)
 
-This basic function applies player input directly to the x and y positions. At this stage, the player can move right through walls!
+This basic function applies player input directly to the x and y positions. At this stage, the player can move right through walls! In order to prevent that, check the Collision.md file.
 
 ```
 function move(o)
