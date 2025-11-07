@@ -1,4 +1,4 @@
-# Top-Down Player Setup
+# Player Setup
 
 The player object needs to be defined within _init() and it should include basic position variables (x, y) and a fixed speed value. We also add optional variables for combat, animation, and game status.
 
