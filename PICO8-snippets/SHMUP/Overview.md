@@ -1,59 +1,62 @@
-# SHMUP Overview
+Space Shooter Game Plan and To-Do List
 
-The SHMUP (Space Shooter/Scroller) genre focuses heavily on reaction time, projectile management, and clearing waves of enemies. Movement is typically non-stop, requiring the player to maintain direct, instant control of their craft.
+This is your master plan! It shows you how the game is built, what lists we use to keep track of everything, and the steps we still need to finish.
 
-The main goal is survival, maximizing score, and progressing through a constantly scrolling threat environment.
+I. How the Game Works Every Second (The Game Loop)
 
-## 1. Player Setup
+Think of your game code like a movie director who follows three steps over and over again, many times every second:
 
-Fixed Speed: Unlike platformers, the player usually moves at a constant, fixed speed defined by a speed variable. The player does not accelerate or decelerate.
+_init() (The Setup Crew): This only runs once when the game starts. It gets the player ready, creates all the main lists, and sets the starting score to zero.
 
-Fire Rate & Health: The player is defined by their rate of fire (controlled by a cooldown timer) and Health Points (HP), which act as a simple damage buffer against enemy attacks.
+_update() (The Action Director): This is the core of the game. It handles all the action: moving the player, making enemies fly, shooting bullets, and, most importantly, checking for crashes (collisions).
 
-Minimal Stats: There are often no complex leveling systems; progression is usually handled by acquiring temporary power-ups that increase firepower or speed.
+_draw() (The Artist): This paints everything on the screen so you can see it. It draws the player, the enemies, the bullets, and your score.
 
-## 2. Level Design
+Key Lists We Use (Data Collections)
 
-Constant Movement: The level constantly scrolls (vertically or horizontally), creating the illusion that the player is moving through an infinite environment.
+We use these lists to store all the moving parts of the game while it’s running:
 
-Boundary Management: The map is limited to the screen boundaries. The player cannot leave the screen, which simplifies movement and collision code.
+## Key Lists We Use (Data Collections)
 
-Spawn Patterns: Levels are defined by pre-planned enemy wave patterns and timed events (like boss encounters or asteroid fields) that appear from the edges of the screen.
-
-## 3. Movement
-
-Direct Control: Movement is instant and simple. Pressing a direction button immediately moves the ship by the fixed speed value. When the button is released, the movement stops immediately.
-
-No Physics: There is no gravity, friction, or momentum, making the controls feel highly responsive and arcade-like.
-
-Boundary Check (Clamping): The core movement function must use a clamping technique to ensure the player's position is always locked between the minimum (0) and maximum (128 - sprite width) edges of the screen.
-
-## 4. Combat
-
-Collection Management: Combat involves managing two main collections (arrays) of objects: the player's outgoing blasters and the incoming enemies (or enemy projectiles).
-
-Single-Press Fire: Shooting is typically handled with a btnp check for a single press, often paired with a cooldown timer to prevent machine-gun fire, balancing the game.
-
-Hit Detection: The primary logic challenge is checking for collision between objects in one collection (e.g., blasters) against objects in another collection (enemies).
-
-## 5. Timers & Spawning
-
-Fire Cooldowns: A small frame counter (fire_cooldown) is essential for limiting the player's offensive power and forcing them to manage their shooting rate.
-
-Enemy Spawners: Enemy waves are triggered by a game timer or score threshold, which dictates when new enemy objects are created and added to the enemies collection.
-
-Blaster Cleanup: Blaster objects must be quickly removed from the blasters collection once they fly off-screen or hit an enemy, or the game will slow down due to too many active objects.
+| List Name | What it Holds | Reference Document |
+| :--- | :--- | :--- |
+| **`enemies`** | A list of all the bad guys currently flying on the screen. | `enemies.md`, `advanced_enemies.md` |
+| **`player_bullets`** | A list of every shot fired by the player's ship. | Core Game Logic |
+| **`enemy_bullets`** | A list of every shot fired by the enemies. | `advanced_enemies.md` (Sec 3) |
+| **`explosions`** | A list of little visual puffs to show when something blows up. | `advanced_enemies.md` (Sec 4) |
+| **`player`** | The most important item: your ship's location, health, and speed. | Core Game Logic |
 
 ---
 
-Key Mechanics (Code Systems Checklist)
+II. The Game Development To-Do List
 
-| Mechanic | Code Focus |
-| :--- | :--- |
-| **Player Setup** | Defining initial variables (`x`, `y`, `speed`, `cooldown`, etc.). |
-| **Movement** | Simple input handling combined with screen boundary **clamping**. |
-| **Blasting** | Creating a new projectile object and adding it to an array (`blasters`). |
-| **Timers & Cooldowns** | Frame counters for player fire rate and enemy spawning frequency. |
-| **Combat** | Collision logic between the `blasters` array and the `enemies` array. |
-| **Cleanup** | Removing blasters and enemies from their arrays when they go off-screen or die. |
-| **Level Design** | A game-time counter to spawn enemy waves according to a defined pattern. |
+Use this checklist to track our progress. The right column tells you exactly which file has the instructions or notes for that part!
+
+A. Game Setup (Getting Started)
+
+## Game Setup and Player/Basic Enemy Checklist
+
+| Status | Feature | Where to Find the Code |
+| :---: | :--- | :--- |
+| [ ] | **Main Lists Ready** (`enemies`, `player_bullets`, etc.) set up in the `_init()` function. | Core Game Logic |
+| [ ] | **Director Functions Ready** (`_init()`, `_update()`, `_draw()`) are built. | Core Game Logic |
+| [ ] | **Game Screens** (Title screen, Playing screen, Game Over screen) are set up. | Core Game Logic |
+
+B. Player Ship System
+| Status | Feature | Where to Find the Code |
+| :---: | :--- | :--- |
+| [ ] | **Player Ship** (`player`) created with starting health and speed. | Core Game Logic |
+| [ ] | **Player Movement** (Moving the ship left and right with keyboard/touch). | Core Game Logic |
+| [ ] | **Player Shooting** (Making the ship fire bullets after a short delay). | Core Game Logic |
+
+C. Basic Bad Guys
+| Status | Feature | Where to Find the Code |
+| :---: | :--- | :--- |
+| [ ] | **Enemy Stats** (Each enemy has a location, health, and score value). | `enemies.md` |
+| [ ] | **Enemy Spawner** (Making new enemies appear randomly). | `enemies.md` |
+| [ ] | **Simple Movement** (Bad guys just fly straight down the screen). | `enemies.md` |
+| [ ] | **Clean Up** (Removing enemies that fly off the bottom of the screen). | `enemies.md` |
+
+D. Advanced Bad Guys
+
+E. Collision Detection
