@@ -62,7 +62,47 @@ This function is responsible for creating a new blaster object and adding it to 
 
 ---
 
-## 3. Update and Draw Functions
+## 4. Collision Detection
+
+This is the key to destroying enemies. We use a proximity check that tests if the bounding box of a blaster is overlapping the bounding box of an enemy. Since we'll assume both sprites are 8 pixels wide (+8 in the check), this logic is very reliable.
+
+The function `check_blaster_hits()` should be called inside your main `_update()` loop after blasters and enemies have been moved.
+
+| Line | Code | Explanation |
+| :--- | :--- | :--- |
+| `2` | `for b in all(blasters) do` | Loop through every active **blaster** (`b`). |
+| `3` | `for e in all(enemies) do` | **Nested Loop:** Check this blaster against every active **enemy** (`e`). |
+| `4` | `if b.x < e.x+8 and b.x+4 > e.x` | **AABB Check (X-axis):** Checks if the blaster's left edge is left of the enemy's right edge, AND the blaster's right edge is right of the enemy's left edge. (Using a small 4-pixel width for the blaster hitbox). |
+| `5` | `and b.y < e.y+8 and b.y+8 > e.y then` | **AABB Check (Y-axis):** Checks if the blaster's top edge is above the enemy's bottom edge, AND the blaster's bottom edge is below the enemy's top edge. |
+| `7` | `del(enemies, e)` | **Destruction:** The enemy is hit and immediately removed from the `enemies` table. |
+| `8` | `del(blasters, b)` | The blaster has served its purpose and is removed from the `blasters` table. |
+| `9` | `break` | **Optimization:** Stop checking this blaster against other enemies—it's already been destroyed! |
+
+```
+function check_blaster_hits()
+    -- Loop through all active blasters
+    for b in all(blasters) do
+        -- Check this blaster against all enemies
+        for e in all(enemies) do
+            -- AABB Collision Check (Assuming 8x8 enemy sprite and an 8-pixel tall blaster)
+            if b.x < e.x+8 and b.x+4 > e.x 
+            and b.y < e.y+8 and b.y+8 > e.y then
+                
+                -- Hit! Destroy both the enemy and the blaster
+                del(enemies, e)
+                del(blasters, b)
+                
+                -- Stop checking this blaster against other enemies
+                break 
+            end
+        end
+    end
+end
+```
+
+---
+
+## 5. Update and Draw Functions
 
 These functions are called inside your main _update() and _draw() loops every frame.
 
@@ -112,6 +152,26 @@ function fire_blaster()
     end
 end
 
+function check_blaster_hits()
+    -- Loop through all active blasters
+    for b in all(blasters) do
+        -- Check this blaster against all enemies
+        for e in all(enemies) do
+            -- AABB Collision Check (Blaster vs. Enemy)
+            if b.x < e.x+8 and b.x+4 > e.x 
+            and b.y < e.y+8 and b.y+8 > e.y then
+                
+                -- Hit! Destroy both the enemy and the blaster
+                del(enemies, e)
+                del(blasters, b)
+                
+                -- Stop checking this blaster against other enemies
+                break 
+            end
+        end
+    end
+end
+
 function update_blasters()
     for b in all(blasters) do
         b.y += b.speed
@@ -121,6 +181,9 @@ function update_blasters()
             del(blasters, b)
         end
     end
+    
+    -- Run collision check after movement is complete
+    check_blaster_hits()
 end
 
 function draw_blasters()
