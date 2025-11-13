@@ -9,11 +9,13 @@ Enemies will be defined like the player - by a table with a series of variables.
 ```
 -- Example: A single enemy object added to the 'enemies' table
 {
-    x = 60,
-    y = -8,
-    hp = 1,
-    speed = ENEMY_SPEED,
-    score_value = 100,
+    x = 60,
+    y = -8,
+    hp = 2, 
+    speed = ENEMY_SPEED,
+    score_value = 100,
+    type = "standard",
+    t = 0
 }
 ```
 
@@ -33,10 +35,18 @@ In your `_init()` you need the following code to create the table and define the
 -- Global table to store all active enemies
 enemies = {}
 
--- Constants for enemy behavior
+-- Shared Constants
 ENEMY_SPEED = 1.0
 SPAWN_COOLDOWN = 30
 spawn_timer = 0
+
+-- Enemy Configuration: Defines HP, score, and speed adjustments by type
+ENEMY_SPECS = {
+    standard = { hp = 2, score = 100, speed_mult = 1.0 },
+    back_and_forth = { hp = 3, score = 200, speed_mult = 0.8 }, -- Tougher, slower zigzag
+    player_chaser = { hp = 1, score = 300, speed_mult = 1.2 },  -- Fragile, high-value, fast chaser
+    circular_path = { hp = 4, score = 250, speed_mult = 0.5 },  -- Very slow, tanky orbital path
+}
 ```
 
 ---
@@ -48,17 +58,28 @@ Spawning is what we call creating a new object (like an enemy or a power-up) and
 This function creates a new enemy and adds it to the enemy table. The `rnd()` function generates a random number within a range, we use `rnd(128)` to place the enemy randomly across the top of the screen (0 to 120, assuming an 8-pixel width) and start them just above the visible boundary (y = -8).
 
 ```
-function spawn_enemy()
+function spawn_enemy(enemy_type)
+    -- If no type is provided (e.g., spawn_enemy()), default to "standard"
+    local type_name = enemy_type or "standard"
+    -- Look up the stats in the specifications table
+    local spec = ENEMY_SPECS[type_name] or ENEMY_SPECS.standard
+
     add(enemies, {
-        -- Start X randomly across the screen width
-        x = rnd(120), 
-        -- Start Y just above the top edge
-        y = -8, 
-        -- Set movement and health
-        speed = ENEMY_SPEED,
-        hp = 1,
-        score_value = 100,
-    })
+        x = rnd(120), 
+        y = -8, 
+        
+        -- Apply the type-specific speed multiplier and stats
+        speed = ENEMY_SPEED * spec.speed_mult,
+        hp = spec.hp,
+        max_health = spec.hp,
+        score_value = spec.score,
+        sprite = spec.sprite,
+        
+        -- Set the type and initial timers
+        type = type_name, 
+        t = 0,
+        shoot_timer = 0,
+    })
 end
 ```
 
